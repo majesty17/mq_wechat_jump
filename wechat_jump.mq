@@ -1,0 +1,59 @@
+
+//一些全局变量
+Dim screenX,screenY
+
+
+//1,获取屏幕分辨率
+screenX = GetScreenX()
+screenY = GetScreenY()
+
+
+//2，第一次按~~
+Call longPress(screenX/2,screenY/2,715)
+Delay 2000
+//3，后面开始循环
+
+For 1000
+	//2，找点
+	//2.1 找到棋子的横坐标和目标圆点的横坐标
+	Dim intX, intY,po_x,po_y //aim_x,aim_y
+	KeepCapture
+	FindPic 0, 0, 0, 0, "Attachment:pic1.png", "000000", 0, 0.9, intX, intY
+	//FindPic 0, 0, 0,0, "Attachment:aim.png","000000",0, 1, aim_x, aim_y
+	FindColor 0,0,0,0,"f5f5f5",0,1,po_x,po_y
+	ReleaseCapture
+	If intX >-1 and po_x>-1 then
+    	Call showMsg("找到啦，坐标是" & intX & "," & intY)
+    	call showMsg("找到啦，坐标是"&po_x&","&po_y)
+	Else
+    	Call showMsg("没找到")
+    	EndScript
+	
+	End If
+	//修正一下
+	intX=intX+2
+	po_x=po_x+6
+
+	//差值即x轴距离	
+	Dim dis
+	dis=abs(intX-po_x)
+	
+	//发起一个长按操作，1.590是系数
+	longPress(screenX/2,screenY/2,1.590*dis)
+	
+	Delay 2000
+	
+Next
+
+
+//函数进行一次长按
+	Sub longPress(x1,y1,ms)
+		Touch x1,y1,ms
+	End Sub
+
+//消息提示
+Sub showMsg(内容)
+    TracePrint 内容
+    ShowMessage 内容
+    Delay 1500
+End Sub
